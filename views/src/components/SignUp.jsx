@@ -1,14 +1,15 @@
-"use client";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import Divider from "@mui/material/Divider";
+import { Link, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 import Buttons from "./Buttons";
 import InputField from "./InputField";
-import { Link } from "react-router-dom";
+import api from "../api/api";
 
 const SignUp = () => {
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const {
     register,
@@ -21,20 +22,14 @@ const SignUp = () => {
   });
 
   const onSubmitHandler = async (formData) => {
+    console.log(formData);
     try {
       setLoading(true);
-      const { data } = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/users/register`,
-        formData
-      );
-    } catch (error) {
-      console.log(error);
-      if (error?.response?.data?.message === "Email is already registered.") {
-        setError("email", { message: error?.response?.data?.message });
-      } else {
-        setError("password", { message: error?.response?.data?.message });
-      }
-
+      const { data } = await api.post("/auth/register", formData);
+      toast.success(data?.message);
+    } catch (err) {
+      console.log(err);
+    } finally {
       setLoading(false);
     }
   };
@@ -57,7 +52,7 @@ const SignUp = () => {
           <InputField
             label="UserName"
             required
-            id="username"
+            id="userName"
             type="text"
             message="UserName is required"
             placeholder="type your first name"
@@ -84,7 +79,7 @@ const SignUp = () => {
             placeholder="type your password"
             register={register}
             errors={errors}
-            min={8}
+            min={6}
           />
         </div>
         <Buttons

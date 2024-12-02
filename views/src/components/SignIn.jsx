@@ -1,12 +1,14 @@
-"use client";
 import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 
 import Buttons from "./Buttons";
 import InputField from "./InputField";
-import { Link } from "react-router-dom";
+import api from "../api/api";
 
 const SignIn = () => {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
   const {
@@ -19,7 +21,17 @@ const SignIn = () => {
   });
 
   const onSubmitHandler = async (formData) => {
-    setLoading(true);
+    try {
+      setLoading(true);
+      const { data } = await api.post("/auth/login", formData);
+      toast.success(data.message);
+      reset();
+      navigate("/");
+    } catch (errors) {
+      toast.error(errors?.response?.data?.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

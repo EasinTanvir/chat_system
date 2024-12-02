@@ -31,7 +31,7 @@ const InputField = ({
         {...register(id, {
           required: { value: required, message },
           minLength: min
-            ? { value: min, message: "Minimum 8 character is required" }
+            ? { value: min, message: "Minimum 6 character is required" }
             : null,
         })}
         readOnly={readOnly}
