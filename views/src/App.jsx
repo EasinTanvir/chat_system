@@ -6,11 +6,13 @@ import ChatPage from "./pages/ChatPage";
 import SignInPage from "./pages/SignInPage";
 import SignUpPage from "./pages/SignUpPage";
 import HomePage from "./pages/HomePage";
+import Navbar from "./components/Navbar";
 
 const App = () => {
   return (
     <Router>
       <Toaster position="top-center" reverseOrder={false} />
+      <Navbar />
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/chat" element={<ChatPage />} />
