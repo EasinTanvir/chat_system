@@ -42,7 +42,8 @@ passport.serializeUser((user, done) => {
 });
 passport.deserializeUser((userId, done) => {
   //find the user by the userId and put it into the req.user on the req object
-  User.findById(userId)
+  prismaCli.user
+    .findUnique({ where: { id: userId } })
     .then((user) => {
       done(null, user);
     })

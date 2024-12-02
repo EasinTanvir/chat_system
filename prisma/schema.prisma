@@ -17,6 +17,15 @@ model User {
   receivedMessages Message[] @relation("ReceivedMessages")
 }
 
+
+
+
+
+
+
+
+
+
 model Conversation {
   id       String @id @default(auto()) @map("_id") @db.ObjectId
   message   Message[]

@@ -24,15 +24,16 @@ module.exports = {
 
         res.status(200).json({
           message: "Login successful",
+          info: {
+            id: user.id,
+            userName: user.userName,
+          },
         });
       });
     })(req, res, next);
   },
   register: async (req, res, next) => {
     const { userName, email, password } = req.body;
-    console.log("userName", userName);
-    console.log("email", email);
-    console.log("password", password);
 
     if (!password || password.trim().length < 6) {
       const errors = new HttpError("Password must be 6 character", 500);

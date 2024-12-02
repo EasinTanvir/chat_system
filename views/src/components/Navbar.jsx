@@ -7,11 +7,16 @@ import { useMyContext } from "../store/ContextApi";
 
 const Navbar = () => {
   const [headerToggle, setHeaderToggle] = useState(false);
-  const { openUserList, setOpenUserList } = useMyContext();
+  const { openUserList, setOpenUserList, userData, setUserData } =
+    useMyContext();
   const pathName = useLocation().pathname;
   const navigate = useNavigate();
 
-  const handleLogout = () => {};
+  const handleLogout = () => {
+    setUserData(null);
+    localStorage.removeItem("userData");
+    navigate("/signin");
+  };
 
   return (
     <header className="h-[74px] z-50 text-textColor bg-headerColor shadow-sm  flex items-center sticky top-0">
@@ -52,11 +57,14 @@ const Navbar = () => {
             </Link>
           </>
 
-          <Link to="/signup">
-            <li className="w-24 text-center bg-btnColor font-semibold px-4 py-2 rounded-sm cursor-pointer hover:text-slate-300">
-              SignUp
-            </li>
-          </Link>
+          {!userData && (
+            <Link to="/signup">
+              <li className="w-24 text-center bg-btnColor font-semibold px-4 py-2 rounded-sm cursor-pointer hover:text-slate-300">
+                SignUp
+              </li>
+            </Link>
+          )}
+          {userData && <button onClick={handleLogout}>Logout</button>}
         </ul>
         <span
           onClick={() => setHeaderToggle(!headerToggle)}

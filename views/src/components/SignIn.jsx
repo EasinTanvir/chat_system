@@ -6,10 +6,13 @@ import toast from "react-hot-toast";
 import Buttons from "./Buttons";
 import InputField from "./InputField";
 import api from "../api/api";
+import { useMyContext } from "../store/ContextApi";
 
 const SignIn = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+
+  const { userData, setUserData } = useMyContext();
 
   const {
     register,
@@ -25,6 +28,8 @@ const SignIn = () => {
       setLoading(true);
       const { data } = await api.post("/auth/login", formData);
       toast.success(data.message);
+      localStorage.setItem("userData", JSON.stringify(data.info));
+      setUserData(data.info);
       reset();
       navigate("/");
     } catch (errors) {

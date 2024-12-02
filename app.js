@@ -50,10 +50,12 @@ app.use("/api/auth", authRoute);
 
 app.use((req, res, next) => {
   const errors = new HttpError("No routes found", 404);
-  next(errors);
+  return next(errors);
 });
 app.use((error, req, res, next) => {
-  res.status(error.code).json({ message: error.message });
+  return res
+    .status(error.code || 500)
+    .json({ message: error.message || "Someting went wrong" });
 });
 
 const server = http.createServer(app);
