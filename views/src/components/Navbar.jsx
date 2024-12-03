@@ -4,19 +4,13 @@ import { IoMenu } from "react-icons/io5";
 import { RxCross1, RxCross2 } from "react-icons/rx";
 import { FaBars } from "react-icons/fa";
 import { useMyContext } from "../store/ContextApi";
+import UserMenu from "./UserMenu";
 
 const Navbar = () => {
   const [headerToggle, setHeaderToggle] = useState(false);
   const { openUserList, setOpenUserList, userData, setUserData } =
     useMyContext();
   const pathName = useLocation().pathname;
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    setUserData(null);
-    localStorage.removeItem("userData");
-    navigate("/signin");
-  };
 
   return (
     <header className="h-[74px] z-50 text-textColor bg-headerColor shadow-sm  flex items-center sticky top-0">
@@ -64,7 +58,7 @@ const Navbar = () => {
               </li>
             </Link>
           )}
-          {userData && <button onClick={handleLogout}>Logout</button>}
+          {userData && <UserMenu user={userData} setUserData={setUserData} />}
         </ul>
         <span
           onClick={() => setHeaderToggle(!headerToggle)}

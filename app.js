@@ -12,6 +12,7 @@ const HttpError = require("./helper/HttpError");
 require("./passport/passport-config");
 
 const authRoute = require("./routes/auth");
+const userRoute = require("./routes/user");
 
 const app = express();
 
@@ -47,6 +48,7 @@ app.use(passport.session());
 
 //routes
 app.use("/api/auth", authRoute);
+app.use("/api/user", userRoute);
 
 app.use((req, res, next) => {
   const errors = new HttpError("No routes found", 404);

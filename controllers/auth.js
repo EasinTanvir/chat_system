@@ -75,4 +75,22 @@ module.exports = {
 
     res.status(200).json({ message: "Register Successful" });
   },
+
+  logout: async (req, res, next) => {
+    req.logout((err) => {
+      if (err) {
+        const errors = new HttpError("Logout failed", 500);
+        return next(errors);
+      }
+
+      req.session.destroy((err) => {
+        if (err) {
+          const errors = new HttpError("Session destruction failed", 500);
+          return next(errors);
+        }
+
+        return res.status(200).json({ message: "Logout successful" });
+      });
+    });
+  },
 };

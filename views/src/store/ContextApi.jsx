@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState } from "react";
 
 const ContextApi = createContext();
 
@@ -9,10 +9,18 @@ export const ContextProvider = ({ children }) => {
 
   const [openUserList, setOpenUserList] = useState(false);
   const [userData, setUserData] = useState(initial_info);
+  const [openModal, setOpenModal] = useState(false);
 
   return (
     <ContextApi.Provider
-      value={{ openUserList, setOpenUserList, userData, setUserData }}
+      value={{
+        openUserList,
+        setOpenUserList,
+        userData,
+        setUserData,
+        openModal,
+        setOpenModal,
+      }}
     >
       {children}
     </ContextApi.Provider>

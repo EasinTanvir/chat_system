@@ -35,7 +35,7 @@ const SignUp = () => {
   };
 
   return (
-    <div className="min-h-screen  flex justify-center items-center">
+    <div className="min-h-[calc(100vh-80px)]  flex justify-center items-center">
       <form
         onSubmit={handleSubmit(onSubmitHandler)}
         className="sm:w-[470px] w-[360px]  shadow-custom rounded-xl  pt-10 pb-7 sm:px-8 px-4"

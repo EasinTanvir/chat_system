@@ -1,19 +1,20 @@
 import React from "react";
-import { userImage } from "../../constant";
 import { FaComments, FaUserPlus } from "react-icons/fa";
 
-const users = [
-  { id: 1, name: "Easin", image: userImage },
-  { id: 2, name: "Tanvir", image: userImage },
-  { id: 3, name: "Jack", image: userImage },
-];
+import { userImage } from "../../constant";
+import { Modals } from "../Modals";
+import { useMyContext } from "../../store/ContextApi";
 
-const UserList = ({ openUserList }) => {
+const UserList = ({ openUserList, allUsers }) => {
+  const { openModal, setOpenModal } = useMyContext();
   return (
     <>
       {!openUserList && (
         <div className=" flex gap-1">
-          <button className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-700 transition-all">
+          <button
+            onClick={() => setOpenModal(true)}
+            className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-700 transition-all"
+          >
             <FaUserPlus className="text-sm" /> {/* Add User Icon */}
             Add User
           </button>
@@ -23,21 +24,22 @@ const UserList = ({ openUserList }) => {
           </button>
         </div>
       )}
-      {users.map((item) => (
-        <User key={item.id} {...item} />
+      {allUsers?.map((item) => (
+        <SingleUser key={item.id} {...item} />
       ))}
+      <Modals />
     </>
   );
 };
 
 export default UserList;
 
-const User = ({ id, name, image }) => {
+const SingleUser = ({ id, userName, image }) => {
   return (
     <div className="border p-2 rounded-xl  flex items-center  gap-3">
-      <img className="w-9 h-9 rounded-full" src={image} />
+      <img className="w-9 h-9 rounded-full" alt={userName} src={userImage} />
       <div>
-        <h3 className="text-lg font-bold">{name}</h3>
+        <h3 className="text-lg font-bold">{userName}</h3>
         <p>Hello, world how are you</p>
       </div>
     </div>
