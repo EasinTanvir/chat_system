@@ -27,7 +27,7 @@ const UserList = ({ openUserList, allUsers }) => {
       {allUsers?.map((item) => (
         <SingleUser key={item.id} {...item} />
       ))}
-      <Modals />
+      <Modals allUsers={allUsers} />
     </>
   );
 };

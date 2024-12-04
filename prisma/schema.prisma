@@ -9,41 +9,49 @@ generator client {
 
 
 model User {
-  id       String    @id @default(auto()) @map("_id") @db.ObjectId
-  userName String
-  email    String    @unique
-  password String
-  sentMessages     Message[] @relation("SentMessages")
-  receivedMessages Message[] @relation("ReceivedMessages")
+  id            String         @id @default(auto()) @map("_id") @db.ObjectId
+  userName      String
+  email         String         @unique
+  password      String
+  emailVerified DateTime?      @map("email_verified")
+  image         String?   
   friends       Friends[]
-}
+  Sender          Conversations[] @relation("sender")
+  Receiver        Conversations[] @relation("receiver")
+  SenderMessage   Message[]       @relation("senderMessage")
+  ReceiverMessage Message[]       @relation("receiverMessage")
 
+  @@map("users")
+}
 
 type Friends {
   userId   String
   friendId String
+  
 }
 
-
-
-model Conversation {
-  id       String @id @default(auto()) @map("_id") @db.ObjectId
-  message   Message[]
-
+model Conversations {
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
+  sender   String    @db.ObjectId
+  receiver String    @db.ObjectId
+  senderId     User      @relation(fields: [sender], references: [id], name: "sender")
+  receiverId   User      @relation(fields: [receiver], references: [id], name: "receiver")
+  Message    Message[]
+  
+    @@map("conversations")
 }
-
-
- 
 
 model Message {
-  id       String @id @default(auto()) @map("_id") @db.ObjectId
-  text     String
-  sender   User   @relation("SentMessages", fields: [senderId], references: [id])
-  receiver User   @relation("ReceivedMessages", fields: [receiverId], references: [id])
-  conversationId Conversation  @relation(fields: [conversation], references: [id])
+  id             String        @id @default(auto()) @map("_id") @db.ObjectId 
+  conversationId String        @db.ObjectId
+  conversation   Conversations @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  senderId         User          @relation(fields: [sender], references: [id], onDelete: Cascade, name: "senderMessage")
+  receiverId       User          @relation(fields: [receiver], references: [id], onDelete: Cascade, name: "receiverMessage")
+  time           DateTime      @default(now())
+  text           String
+  sender       String        @db.ObjectId
+  receiver   String        @db.ObjectId
 
-  senderId   String  @db.ObjectId
-  receiverId String  @db.ObjectId
-  conversation String  @db.ObjectId
+    @@map("messages")
 }
 

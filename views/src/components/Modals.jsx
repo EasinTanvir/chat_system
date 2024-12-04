@@ -4,6 +4,8 @@ import Modal from "@mui/material/Modal";
 
 import { useMyContext } from "../store/ContextApi";
 import { userImage } from "../constant";
+import api from "../api/api";
+import toast from "react-hot-toast";
 
 const users = [
   { id: 1, name: "Easin", image: userImage },
@@ -19,7 +21,7 @@ const users = [
   { id: 2, name: "Tanvir", image: userImage },
   { id: 3, name: "Jack", image: userImage },
 ];
-export const Modals = () => {
+export const Modals = ({ allUsers }) => {
   const { openModal, setOpenModal } = useMyContext();
   const handleOpen = () => setOpenModal(true);
 
@@ -42,7 +44,7 @@ export const Modals = () => {
             </button>
 
             <div className="mt-2 space-y-4">
-              {users.map((item) => (
+              {allUsers?.map((item) => (
                 <SingleUser key={item.id} {...item} />
               ))}
             </div>
@@ -53,17 +55,32 @@ export const Modals = () => {
   );
 };
 
-const SingleUser = ({ id, name, image }) => {
+const SingleUser = ({ id, userName, image }) => {
+  const onAddConversationHandler = async (receiverId) => {
+    try {
+      const { data } = await api.post("/api/conversation/create", {
+        receiverId,
+      });
+
+      console.log(data);
+    } catch (err) {
+      toast.error("conversation craete failed");
+    }
+  };
+
   return (
     <div className="border border-slate-400 px-2 py-4 rounded-xl  shadow-md  flex justify-between items-center">
       <div className="flex items-center  gap-3">
-        <img className="w-9 h-9 rounded-full" src={image} />
+        <img className="w-9 h-9 rounded-full" src={userImage} />
         <div>
-          <h3 className="text-lg font-bold">{name}</h3>
+          <h3 className="text-lg font-bold">{userName}</h3>
         </div>
       </div>
 
-      <button className="bg-blue-600 text-white px-3 py-1.5 rounded-lg">
+      <button
+        onClick={() => onAddConversationHandler(id)}
+        className="bg-blue-600 text-white px-3 py-1.5 rounded-lg"
+      >
         Add User
       </button>
     </div>
