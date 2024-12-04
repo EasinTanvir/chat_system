@@ -7,21 +7,7 @@ import { userImage } from "../constant";
 import api from "../api/api";
 import toast from "react-hot-toast";
 
-const users = [
-  { id: 1, name: "Easin", image: userImage },
-  { id: 2, name: "Tanvir", image: userImage },
-  { id: 3, name: "Jack", image: userImage },
-  { id: 1, name: "Easin", image: userImage },
-  { id: 2, name: "Tanvir", image: userImage },
-  { id: 3, name: "Jack", image: userImage },
-  { id: 1, name: "Easin", image: userImage },
-  { id: 2, name: "Tanvir", image: userImage },
-  { id: 3, name: "Jack", image: userImage },
-  { id: 1, name: "Easin", image: userImage },
-  { id: 2, name: "Tanvir", image: userImage },
-  { id: 3, name: "Jack", image: userImage },
-];
-export const Modals = ({ allUsers }) => {
+export const Modals = ({ allUsers, refetch }) => {
   const { openModal, setOpenModal } = useMyContext();
   const handleOpen = () => setOpenModal(true);
 
@@ -45,7 +31,7 @@ export const Modals = ({ allUsers }) => {
 
             <div className="mt-2 space-y-4">
               {allUsers?.map((item) => (
-                <SingleUser key={item.id} {...item} />
+                <SingleUser key={item.id} {...item} refetch={refetch} />
               ))}
             </div>
           </div>
@@ -55,12 +41,13 @@ export const Modals = ({ allUsers }) => {
   );
 };
 
-const SingleUser = ({ id, userName, image }) => {
+const SingleUser = ({ id, userName, image, refetch }) => {
   const onAddConversationHandler = async (receiverId) => {
     try {
-      const { data } = await api.post("/api/conversation/create", {
+      const { data } = await api.post("/conversation/create", {
         receiverId,
       });
+      await refetch();
 
       console.log(data);
     } catch (err) {

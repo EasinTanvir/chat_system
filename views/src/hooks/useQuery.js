@@ -24,3 +24,20 @@ export const useFetchAllUsers = (onError) => {
     }
   );
 };
+export const useFetchAllConversations = (onError) => {
+  return useQuery(
+    "all-conversations",
+    async () => {
+      return await api.get("/conversation/all");
+    },
+    {
+      select: (data) => {
+        return {
+          conversations: data.data.conversations,
+        };
+      },
+      onError,
+      staleTime: 5000,
+    }
+  );
+};

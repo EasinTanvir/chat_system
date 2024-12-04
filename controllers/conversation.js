@@ -1,13 +1,49 @@
+const HttpError = require("../helper/HttpError");
 const { prismaCli } = require("../prismaCli");
 
 module.exports = {
   getAllConversations: async (req, res, next) => {
-    try {
-      const user = await prismaCli.conversations.findMany();
+    const currentUser = req.user;
 
-      res.status(200).json({ users: user });
+    try {
+      const conversations = await prismaCli.conversations.findMany({
+        where: {
+          OR: [
+            { sender: currentUser.id }, // If the user is the sender
+            { receiver: currentUser.id }, // If the user is the receiver
+          ],
+        },
+        include: {
+          senderId: true,
+          receiverId: true,
+          Message: true,
+        },
+      });
+
+      res.status(200).json({ conversations });
     } catch (err) {
-      const errors = new HttpError("fetch user failed", 500);
+      const errors = new HttpError("Fetch conversations failed", 500);
+      return next(errors);
+    }
+  },
+  getSingleConversation: async (req, res, next) => {
+    const { id } = req.params;
+
+    try {
+      const conversation = await prismaCli.conversations.findUnique({
+        where: {
+          id,
+        },
+        include: {
+          senderId: true,
+          receiverId: true,
+          Message: true,
+        },
+      });
+
+      res.status(200).json({ conversation });
+    } catch (err) {
+      const errors = new HttpError("Fetch conversations failed", 500);
       return next(errors);
     }
   },
@@ -17,6 +53,7 @@ module.exports = {
     const currentUser = req.user;
 
     try {
+      // Create a new conversation
       const conversation = await prismaCli.conversations.create({
         data: {
           sender: currentUser.id,
@@ -24,9 +61,19 @@ module.exports = {
         },
       });
 
+      // Update the current user's friends array to include the receiverId
+      await prismaCli.user.update({
+        where: { id: currentUser.id },
+        data: {
+          friends: {
+            push: { userId: currentUser.id, friendId: receiverId },
+          },
+        },
+      });
+
       res.status(200).json({ conversation });
     } catch (err) {
-      const errors = new HttpError("fetch user failed", 500);
+      const errors = new HttpError("Creating conversation failed", 500);
       return next(errors);
     }
   },

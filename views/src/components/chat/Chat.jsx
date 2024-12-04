@@ -5,7 +5,10 @@ import toast from "react-hot-toast";
 import UserList from "./UserList";
 import ChatBox from "./ChatBox";
 import { useMyContext } from "../../store/ContextApi";
-import { useFetchAllUsers } from "../../hooks/useQuery";
+import {
+  useFetchAllConversations,
+  useFetchAllUsers,
+} from "../../hooks/useQuery";
 import { useLogoutHandler } from "../../hooks/useHook";
 import Skeleton from "../Skeleton";
 
@@ -19,7 +22,15 @@ const Chat = () => {
     refetch,
     error,
   } = useFetchAllUsers(onError);
-  console.log("user", allUsers);
+
+  const {
+    isLoading: conversationLoader,
+    data: allConversations,
+    refetch: conversationRefetch,
+    error: converError,
+  } = useFetchAllConversations(onError);
+
+  console.log("allConversations", allConversations);
 
   function onError(err) {
     if (err.status == 401) {
@@ -38,7 +49,11 @@ const Chat = () => {
           openUserList ? " w-0 p-0" : "w-80 p-6"
         }`}
       >
-        <UserList allUsers={allUsers} openUserList={openUserList} />
+        <UserList
+          allUsers={allUsers}
+          openUserList={openUserList}
+          refetch={refetch}
+        />
       </div>
       <div className="flex-1 flex flex-col">
         <ChatBox />

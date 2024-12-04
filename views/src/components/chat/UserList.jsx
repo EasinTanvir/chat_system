@@ -5,7 +5,7 @@ import { userImage } from "../../constant";
 import { Modals } from "../Modals";
 import { useMyContext } from "../../store/ContextApi";
 
-const UserList = ({ openUserList, allUsers }) => {
+const UserList = ({ openUserList, allUsers, refetch }) => {
   const { openModal, setOpenModal } = useMyContext();
   return (
     <>
@@ -27,7 +27,7 @@ const UserList = ({ openUserList, allUsers }) => {
       {allUsers?.map((item) => (
         <SingleUser key={item.id} {...item} />
       ))}
-      <Modals allUsers={allUsers} />
+      <Modals allUsers={allUsers} refetch={refetch} />
     </>
   );
 };
