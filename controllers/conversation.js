@@ -8,14 +8,11 @@ module.exports = {
     try {
       const conversations = await prismaCli.conversations.findMany({
         where: {
-          OR: [
-            { sender: currentUser.id }, // If the user is the sender
-            { receiver: currentUser.id }, // If the user is the receiver
-          ],
+          OR: [{ senderId: currentUser.id }, { receiverId: currentUser.id }],
         },
         include: {
-          senderId: true,
-          receiverId: true,
+          sender: true,
+          receiver: true,
           Message: true,
         },
       });
@@ -35,8 +32,8 @@ module.exports = {
           id,
         },
         include: {
-          senderId: true,
-          receiverId: true,
+          sender: true,
+          receiver: true,
           Message: true,
         },
       });
@@ -53,20 +50,26 @@ module.exports = {
     const currentUser = req.user;
 
     try {
-      // Create a new conversation
       const conversation = await prismaCli.conversations.create({
         data: {
-          sender: currentUser.id,
-          receiver: receiverId,
+          senderId: currentUser.id,
+          receiverId: receiverId,
         },
       });
 
-      // Update the current user's friends array to include the receiverId
       await prismaCli.user.update({
         where: { id: currentUser.id },
         data: {
           friends: {
             push: { userId: currentUser.id, friendId: receiverId },
+          },
+        },
+      });
+      await prismaCli.user.update({
+        where: { id: receiverId },
+        data: {
+          friends: {
+            push: { userId: receiverId, friendId: currentUser.id },
           },
         },
       });

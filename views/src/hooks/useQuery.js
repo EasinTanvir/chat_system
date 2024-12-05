@@ -24,6 +24,7 @@ export const useFetchAllUsers = (onError) => {
     }
   );
 };
+
 export const useFetchAllConversations = (onError) => {
   return useQuery(
     "all-conversations",
@@ -38,6 +39,24 @@ export const useFetchAllConversations = (onError) => {
       },
       onError,
       staleTime: 5000,
+    }
+  );
+};
+export const useFetchAllConversationMessage = (converId, onError) => {
+  return useQuery(
+    ["conversation-message", converId],
+    async () => {
+      return await api.get(`/message/${converId}`);
+    },
+    {
+      select: (data) => {
+        return {
+          messages: data.data.messages,
+        };
+      },
+      onError,
+      staleTime: 5000,
+      enabled: !!converId,
     }
   );
 };

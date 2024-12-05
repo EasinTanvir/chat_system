@@ -10,6 +10,8 @@ export const ContextProvider = ({ children }) => {
   const [openUserList, setOpenUserList] = useState(false);
   const [userData, setUserData] = useState(initial_info);
   const [openModal, setOpenModal] = useState(false);
+  const [converId, setConverId] = useState("");
+  const [receiverId, setReceiverId] = useState("");
 
   return (
     <ContextApi.Provider
@@ -20,6 +22,10 @@ export const ContextProvider = ({ children }) => {
         setUserData,
         openModal,
         setOpenModal,
+        converId,
+        setConverId,
+        receiverId,
+        setReceiverId,
       }}
     >
       {children}

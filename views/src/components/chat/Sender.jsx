@@ -1,11 +1,11 @@
 import React from "react";
 
-const Sender = ({ sender, profileImage }) => {
+const Sender = ({ text, time, profileImage }) => {
   return (
     <div className="flex justify-end items-center">
       {/* Message Bubble */}
       <div className="relative bg-blue-500 text-white rounded-lg p-3 max-w-[70%]">
-        <h1>{sender}</h1>
+        <h1>{text}</h1>
         {/* Triangle pointing to profile image */}
         <div className="absolute -right-2 top-3 w-0 h-0 border-t-[8px] border-t-transparent border-b-[8px] border-b-transparent border-l-[8px] border-l-blue-500"></div>
       </div>

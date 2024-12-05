@@ -1,19 +1,17 @@
 import React from "react";
-import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
+import toast from "react-hot-toast";
 
 import { useMyContext } from "../store/ContextApi";
 import { userImage } from "../constant";
 import api from "../api/api";
-import toast from "react-hot-toast";
 
-export const Modals = ({ allUsers, refetch }) => {
+export const Modals = ({ allUsers, refetch, conversationRefetch }) => {
   const { openModal, setOpenModal } = useMyContext();
   const handleOpen = () => setOpenModal(true);
 
   return (
     <div>
-      <Button onClick={handleOpen}>Open modal</Button>
       <Modal
         open={openModal}
         onClose={setOpenModal}
@@ -31,7 +29,12 @@ export const Modals = ({ allUsers, refetch }) => {
 
             <div className="mt-2 space-y-4">
               {allUsers?.map((item) => (
-                <SingleUser key={item.id} {...item} refetch={refetch} />
+                <SingleUser
+                  key={item.id}
+                  {...item}
+                  refetch={refetch}
+                  conversationRefetch={conversationRefetch}
+                />
               ))}
             </div>
           </div>
@@ -41,13 +44,14 @@ export const Modals = ({ allUsers, refetch }) => {
   );
 };
 
-const SingleUser = ({ id, userName, image, refetch }) => {
+const SingleUser = ({ id, userName, image, refetch, conversationRefetch }) => {
   const onAddConversationHandler = async (receiverId) => {
     try {
       const { data } = await api.post("/conversation/create", {
         receiverId,
       });
       await refetch();
+      await conversationRefetch();
 
       console.log(data);
     } catch (err) {

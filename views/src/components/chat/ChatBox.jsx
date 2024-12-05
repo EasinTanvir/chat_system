@@ -4,94 +4,21 @@ import Sender from "./Sender";
 import Receiver from "./Receiver";
 import ChatText from "./ChatText";
 import { userImage } from "../../constant";
+import { useMyContext } from "../../store/ContextApi";
 
-const messages = [
-  {
-    sender: "Hello, ",
-    receiver: "Reply how are you ",
-    senderImage: userImage, // Add actual profile images here
-    receiverImage: userImage,
-  },
-  {
-    sender: "Great",
-    receiver: "I am also fine",
-    senderImage: userImage,
-    receiverImage: userImage,
-  },
-  {
-    sender: "What about you",
-    receiver: "Good man",
-    senderImage: userImage,
-    receiverImage: userImage,
-  },
-  {
-    sender: "Well done",
-    receiver: "We are working on our system",
-    senderImage: userImage,
-    receiverImage: userImage,
-  },
-  {
-    sender: "Hello",
-    receiver: "Reply how are you",
-    senderImage: userImage, // Add actual profile images here
-    receiverImage: userImage,
-  },
-  {
-    sender: "Great",
-    receiver: "I am also fine",
-    senderImage: userImage,
-    receiverImage: userImage,
-  },
-  {
-    sender: "What about you",
-    receiver: "Good man",
-    senderImage: userImage,
-    receiverImage: userImage,
-  },
-  {
-    sender: "Well done",
-    receiver: "We are working on our system",
-    senderImage: userImage,
-    receiverImage: userImage,
-  },
-  {
-    sender: "Hello",
-    receiver: "Reply how are you",
-    senderImage: userImage, // Add actual profile images here
-    receiverImage: userImage,
-  },
-  {
-    sender: "Great",
-    receiver: "I am also fine",
-    senderImage: userImage,
-    receiverImage: userImage,
-  },
-  {
-    sender: "What about you",
-    receiver: "Good man",
-    senderImage: userImage,
-    receiverImage: userImage,
-  },
-  {
-    sender: "Well done",
-    receiver: "We are working on our system",
-    senderImage: userImage,
-    receiverImage: userImage,
-  },
-];
-
-const ChatBox = () => {
+const ChatBox = ({ allMesssages }) => {
+  const { userData } = useMyContext();
   return (
     <>
       <ChatBoxHeader />
-      <div className="min-h-[calc(100%-160px)] max-h-[calc(100%-160)] overflow-y-auto px-4 py-y space-y-4">
-        {messages.map((item, i) => (
+      <div className="min-h-[calc(100%-160px)] max-h-[calc(100%-160)] overflow-y-auto px-4 py-5 space-y-4">
+        {allMesssages?.map((item, i) => (
           <div className="space-y-4" key={i}>
-            <Sender sender={item.sender} profileImage={item.senderImage} />
-            <Receiver
-              receiver={item.receiver}
-              profileImage={item.receiverImage}
-            />
+            {item?.senderId === userData?.id ? (
+              <Sender profileImage={userImage} {...item} />
+            ) : (
+              <Receiver {...item} profileImage={userImage} />
+            )}
           </div>
         ))}
       </div>

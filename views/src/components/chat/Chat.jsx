@@ -1,19 +1,21 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
-import UserList from "./UserList";
 import ChatBox from "./ChatBox";
 import { useMyContext } from "../../store/ContextApi";
+import { useLogoutHandler } from "../../hooks/useHook";
+import Skeleton from "../Skeleton";
+import ConversationList from "./ConversationList";
+import api from "../../api/api";
 import {
   useFetchAllConversations,
   useFetchAllUsers,
 } from "../../hooks/useQuery";
-import { useLogoutHandler } from "../../hooks/useHook";
-import Skeleton from "../Skeleton";
 
 const Chat = () => {
-  const { openUserList, setUserData } = useMyContext();
+  const { openUserList, setUserData, converId, receiverId } = useMyContext();
+  const [allMesssages, setAllMesssages] = useState([]);
   const navigate = useNavigate();
 
   const {
@@ -30,7 +32,22 @@ const Chat = () => {
     error: converError,
   } = useFetchAllConversations(onError);
 
-  console.log("allConversations", allConversations);
+  useEffect(() => {
+    const fetchConverMessages = async () => {
+      try {
+        const { data } = await api.get(`/message/${converId}`);
+
+        console.log(data);
+        setAllMesssages(data.messages);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    if (converId) {
+      fetchConverMessages();
+    }
+  }, [converId]);
 
   function onError(err) {
     if (err.status == 401) {
@@ -40,7 +57,9 @@ const Chat = () => {
     }
   }
 
-  if (isLoading) return <Skeleton />;
+  const loader = isLoading || conversationLoader;
+
+  if (loader) return <Skeleton />;
 
   return (
     <div className="flex min-h-[calc(100vh-74px)]  max-h-[calc(100vh-74px)]">
@@ -49,14 +68,16 @@ const Chat = () => {
           openUserList ? " w-0 p-0" : "w-80 p-6"
         }`}
       >
-        <UserList
+        <ConversationList
           allUsers={allUsers}
+          allConversation={allConversations?.conversations}
           openUserList={openUserList}
           refetch={refetch}
+          conversationRefetch={conversationRefetch}
         />
       </div>
       <div className="flex-1 flex flex-col">
-        <ChatBox />
+        <ChatBox allMesssages={allMesssages} />
       </div>
     </div>
   );

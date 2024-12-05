@@ -14,6 +14,7 @@ require("./passport/passport-config");
 const authRoute = require("./routes/auth");
 const userRoute = require("./routes/user");
 const conversationRoute = require("./routes/conversation");
+const messageRoute = require("./routes/message");
 
 const app = express();
 
@@ -51,6 +52,7 @@ app.use(passport.session());
 app.use("/api/auth", authRoute);
 app.use("/api/user", userRoute);
 app.use("/api/conversation", conversationRoute);
+app.use("/api/message", messageRoute);
 
 app.use((req, res, next) => {
   const errors = new HttpError("No routes found", 404);
