@@ -13,10 +13,14 @@ import {
   useFetchAllUsers,
 } from "../../hooks/useQuery";
 
+import { socket } from "../../../utils/socket";
+
 const Chat = () => {
   const { openUserList, setUserData, converId, receiverId } = useMyContext();
   const [allMesssages, setAllMesssages] = useState([]);
   const navigate = useNavigate();
+
+  console.log("allMesssages", allMesssages);
 
   const {
     isLoading,
@@ -33,11 +37,28 @@ const Chat = () => {
   } = useFetchAllConversations(onError);
 
   useEffect(() => {
+    const handler = (data) => {
+      setAllMesssages((prevMessages) => [
+        ...prevMessages,
+        {
+          text: data.message,
+          receiverId: data.receiverId,
+          conversationId: data.converId,
+          senderId: data.senderId,
+        },
+      ]);
+    };
+
+    socket.on("send-message-frontend", handler);
+
+    return () => socket.off("send-message-frontend", handler);
+  }, []);
+
+  useEffect(() => {
     const fetchConverMessages = async () => {
       try {
         const { data } = await api.get(`/message/${converId}`);
 
-        console.log(data);
         setAllMesssages(data.messages);
       } catch (err) {
         console.error(err);
@@ -77,7 +98,10 @@ const Chat = () => {
         />
       </div>
       <div className="flex-1 flex flex-col">
-        <ChatBox allMesssages={allMesssages} />
+        <ChatBox
+          allMesssages={allMesssages}
+          setAllMesssages={setAllMesssages}
+        />
       </div>
     </div>
   );

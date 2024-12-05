@@ -4,12 +4,13 @@ const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const cors = require("cors");
 const http = require("http");
-const { Server } = require("socket.io");
 const session = require("express-session");
 const passport = require("passport");
 const MongoStore = require("connect-mongo");
+
 const HttpError = require("./helper/HttpError");
 require("./passport/passport-config");
+const { socketSetup } = require("./middleware/socket");
 
 const authRoute = require("./routes/auth");
 const userRoute = require("./routes/user");
@@ -17,6 +18,7 @@ const conversationRoute = require("./routes/conversation");
 const messageRoute = require("./routes/message");
 
 const app = express();
+const server = http.createServer(app);
 
 app.use(
   cors({
@@ -64,22 +66,6 @@ app.use((error, req, res, next) => {
     .json({ message: error.message || "Someting went wrong" });
 });
 
-const server = http.createServer(app);
+socketSetup(server);
 
 module.exports = { app, server };
-
-// const io = new Server(server, {
-//   cors: { origin: "http://localhost:5173" },
-// });
-
-// io.on("connection", (socket) => {
-//   socket.on("room", (data) => {
-//     socket.join(data);
-//   });
-
-//   socket.on("data", (data) => {
-//     socket
-//       .to(data.room)
-//       .emit("backend", { data: data.message, action: "create" });
-//   });
-// });

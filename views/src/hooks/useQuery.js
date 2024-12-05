@@ -20,7 +20,11 @@ export const useFetchAllUsers = (onError) => {
         return sendData;
       },
       onError,
-      staleTime: 5000,
+      staleTime: Infinity, // Data remains fresh indefinitely
+      cacheTime: Infinity, // Keeps data in the cache without automatic garbage collection
+      refetchOnWindowFocus: false, // Prevents refetching on window focus
+      refetchOnMount: false, // Prevents refetching when the component remounts
+      refetchInterval: false, //
     }
   );
 };
@@ -38,7 +42,11 @@ export const useFetchAllConversations = (onError) => {
         };
       },
       onError,
-      staleTime: 5000,
+      staleTime: Infinity, // Data remains fresh indefinitely
+      cacheTime: Infinity, // Keeps data in the cache without automatic garbage collection
+      refetchOnWindowFocus: false, // Prevents refetching on window focus
+      refetchOnMount: false, // Prevents refetching when the component remounts
+      refetchInterval: false, //
     }
   );
 };

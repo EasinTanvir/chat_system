@@ -4,6 +4,7 @@ import { FaComments, FaUserPlus } from "react-icons/fa";
 import { userImage } from "../../constant";
 import { Modals } from "../Modals";
 import { useMyContext } from "../../store/ContextApi";
+import { socket } from "../../../utils/socket";
 
 const ConversationList = ({
   openUserList,
@@ -81,7 +82,7 @@ const SingleUser = ({
     <div
       onClick={() => {
         setConverId(id);
-
+        socket.emit("room", { converId: id });
         setReceiverId(receiverId);
       }}
       className={`border p-2 cursor-pointer rounded-xl  flex items-center  gap-3 ${

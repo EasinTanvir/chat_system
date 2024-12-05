@@ -3,13 +3,30 @@ import { IoSend } from "react-icons/io5";
 import api from "../../api/api";
 import { useMyContext } from "../../store/ContextApi";
 import { useState } from "react";
+import { socket } from "../../../utils/socket";
 
-const ChatText = () => {
-  const { converId, receiverId } = useMyContext();
+const ChatText = ({ allMesssages, setAllMesssages }) => {
+  const { converId, receiverId, userData } = useMyContext();
 
   const [text, setText] = useState("");
 
   const onMessageHandler = async () => {
+    socket.emit("send-message-backend", {
+      text,
+      converId,
+      receiverId,
+      senderId: userData.id,
+    });
+    setAllMesssages([
+      ...allMesssages,
+      {
+        text,
+        receiverId: receiverId,
+        conversationId: converId,
+        senderId: userData.id,
+      },
+    ]);
+
     try {
       await api.post("/message/create", {
         receiverId: receiverId,
