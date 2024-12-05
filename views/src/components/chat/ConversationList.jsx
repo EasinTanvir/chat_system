@@ -5,6 +5,7 @@ import { userImage } from "../../constant";
 import { Modals } from "../Modals";
 import { useMyContext } from "../../store/ContextApi";
 import { socket } from "../../../utils/socket";
+import { truncateText } from "../../../utils/truncate";
 
 const ConversationList = ({
   openUserList,
@@ -20,6 +21,8 @@ const ConversationList = ({
     converId,
     setConverId,
     setReceiverId,
+    selectedUser,
+    setSelectedUser,
   } = useMyContext();
 
   return (
@@ -47,6 +50,7 @@ const ConversationList = ({
             setConverId={setConverId}
             converId={converId}
             setReceiverId={setReceiverId}
+            setSelectedUser={setSelectedUser}
           />
         ))
       ) : (
@@ -75,6 +79,8 @@ const SingleUser = ({
   setConverId,
   converId,
   setReceiverId,
+  setSelectedUser,
+  Message,
 }) => {
   const user =
     userData?.id === senderId ? receiver?.userName : sender?.userName;
@@ -84,6 +90,7 @@ const SingleUser = ({
         setConverId(id);
         socket.emit("room", { converId: id });
         setReceiverId(receiverId);
+        setSelectedUser(user);
       }}
       className={`border p-2 cursor-pointer rounded-xl  flex items-center  gap-3 ${
         converId === id ? "bg-slate-300" : ""
@@ -92,7 +99,7 @@ const SingleUser = ({
       <img className="w-9 h-9 rounded-full" alt={userName} src={userImage} />
       <div>
         <h3 className="text-lg font-bold">{user}</h3>
-        <p>Hello, world how are you</p>
+        {Message.length > 0 ? <p>{truncateText(Message[0]?.text, 2)}</p> : null}
       </div>
     </div>
   );

@@ -1,14 +1,22 @@
 import React from "react";
+import moment from "moment";
+import { FaClock } from "react-icons/fa";
 
 const Sender = ({ text, time, profileImage }) => {
   return (
-    <div className="flex justify-end items-center">
+    <div className="flex justify-end items-start mb-4">
       {/* Message Bubble */}
       <div className="relative bg-blue-500 text-white rounded-lg p-3 max-w-[70%]">
         <h1>{text}</h1>
         {/* Triangle pointing to profile image */}
         <div className="absolute -right-2 top-3 w-0 h-0 border-t-[8px] border-t-transparent border-b-[8px] border-b-transparent border-l-[8px] border-l-blue-500"></div>
+        {/* Time with Clock Icon */}
+        <div className="flex items-center text-sm text-gray-200 mt-2">
+          <FaClock className="mr-1" />
+          {moment(time).fromNow()}
+        </div>
       </div>
+
       {/* Profile Image */}
       <img
         src={profileImage || "https://via.placeholder.com/40"}

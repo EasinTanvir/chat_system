@@ -40,7 +40,7 @@ const ChatText = ({ allMesssages, setAllMesssages }) => {
   };
 
   return (
-    <div className="flex min-h-14  ">
+    <div className="flex min-h-14  max-h-14 ">
       <input
         value={text}
         onChange={(e) => setText(e.target.value)}

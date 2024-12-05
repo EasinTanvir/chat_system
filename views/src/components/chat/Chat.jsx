@@ -18,9 +18,8 @@ import { socket } from "../../../utils/socket";
 const Chat = () => {
   const { openUserList, setUserData, converId, receiverId } = useMyContext();
   const [allMesssages, setAllMesssages] = useState([]);
+  const [msgLoader, setMsgLoader] = useState(false);
   const navigate = useNavigate();
-
-  console.log("allMesssages", allMesssages);
 
   const {
     isLoading,
@@ -56,12 +55,15 @@ const Chat = () => {
 
   useEffect(() => {
     const fetchConverMessages = async () => {
+      setMsgLoader(true);
       try {
         const { data } = await api.get(`/message/${converId}`);
 
         setAllMesssages(data.messages);
       } catch (err) {
         console.error(err);
+      } finally {
+        setMsgLoader(false);
       }
     };
 
@@ -80,7 +82,12 @@ const Chat = () => {
 
   const loader = isLoading || conversationLoader;
 
-  if (loader) return <Skeleton />;
+  if (loader)
+    return (
+      <div className="m-7">
+        <Skeleton />
+      </div>
+    );
 
   return (
     <div className="flex min-h-[calc(100vh-74px)]  max-h-[calc(100vh-74px)]">
@@ -101,6 +108,7 @@ const Chat = () => {
         <ChatBox
           allMesssages={allMesssages}
           setAllMesssages={setAllMesssages}
+          msgLoader={msgLoader}
         />
       </div>
     </div>

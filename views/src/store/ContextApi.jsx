@@ -12,6 +12,8 @@ export const ContextProvider = ({ children }) => {
   const [openModal, setOpenModal] = useState(false);
   const [converId, setConverId] = useState("");
   const [receiverId, setReceiverId] = useState("");
+  const [selectedUser, setSelectedUser] = useState("");
+  const [selectActiveStatus, setSelectActiveStatus] = useState(false);
 
   return (
     <ContextApi.Provider
@@ -26,6 +28,8 @@ export const ContextProvider = ({ children }) => {
         setConverId,
         receiverId,
         setReceiverId,
+        selectedUser,
+        setSelectedUser,
       }}
     >
       {children}
