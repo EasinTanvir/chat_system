@@ -3,10 +3,9 @@ import { IoSend } from "react-icons/io5";
 import api from "../../api/api";
 import { useMyContext } from "../../store/ContextApi";
 import { useState } from "react";
-import { socket } from "../../../utils/socket";
 
 const ChatText = ({ allMesssages, setAllMesssages }) => {
-  const { converId, receiverId, userData } = useMyContext();
+  const { converId, receiverId, userData, socket } = useMyContext();
 
   const [text, setText] = useState("");
 

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { io } from "socket.io-client";
 
 import ChatBox from "./ChatBox";
 import { useMyContext } from "../../store/ContextApi";
@@ -13,10 +14,16 @@ import {
   useFetchAllUsers,
 } from "../../hooks/useQuery";
 
-import { socket } from "../../../utils/socket";
-
 const Chat = () => {
-  const { openUserList, setUserData, converId, receiverId } = useMyContext();
+  const {
+    openUserList,
+    userData,
+    setUserData,
+    converId,
+    receiverId,
+    setSelectActiveUser,
+    socket,
+  } = useMyContext();
   const [allMesssages, setAllMesssages] = useState([]);
   const [msgLoader, setMsgLoader] = useState(false);
   const navigate = useNavigate();
@@ -71,6 +78,20 @@ const Chat = () => {
       fetchConverMessages();
     }
   }, [converId]);
+
+  useEffect(() => {
+    const socket = io.connect("http://localhost:3000", {
+      auth: { token: userData?.id },
+    });
+
+    const handler = (data) => {
+      setSelectActiveUser(data);
+    };
+
+    socket.on("active-user", handler);
+
+    return () => socket.off("active-user", handler);
+  }, [socket]);
 
   function onError(err) {
     if (err.status == 401) {

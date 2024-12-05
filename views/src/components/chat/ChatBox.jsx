@@ -6,9 +6,11 @@ import ChatText from "./ChatText";
 import { userImage } from "../../constant";
 import { useMyContext } from "../../store/ContextApi";
 import Skeleton from "../Skeleton";
+import { Alert } from "@mui/material";
 
 const ChatBox = ({ allMesssages, setAllMesssages, msgLoader }) => {
-  const { userData, selectedUser } = useMyContext();
+  const { userData, selectedUser, converId, selectActiveUsers, receiverId } =
+    useMyContext();
   const chatContainerRef = useRef(null);
 
   useEffect(() => {
@@ -22,7 +24,12 @@ const ChatBox = ({ allMesssages, setAllMesssages, msgLoader }) => {
 
   return (
     <>
-      <ChatBoxHeader selectedUser={selectedUser} />
+      <ChatBoxHeader
+        selectedUser={selectedUser}
+        selectActiveUsers={selectActiveUsers}
+        userData={userData}
+        receiverId={receiverId}
+      />
       <div
         ref={chatContainerRef}
         className="min-h-[calc(100%-126px)] max-h-[calc(100%-126px)] custom-scrollbar overflow-y-auto px-4 py-5 space-y-4 
@@ -32,15 +39,28 @@ const ChatBox = ({ allMesssages, setAllMesssages, msgLoader }) => {
           <Skeleton />
         ) : (
           <>
-            {allMesssages?.map((item, i) => (
-              <div className="space-y-4" key={i}>
-                {item?.senderId === userData?.id ? (
-                  <Sender profileImage={userImage} {...item} />
-                ) : (
-                  <Receiver {...item} profileImage={userImage} />
-                )}
+            {!converId ? (
+              <div className="h-full   flex-center">
+                <Alert severity="warning">
+                  Please Select a Conversation to start Chat
+                </Alert>
               </div>
-            ))}
+            ) : (
+              <>
+                {" "}
+                <>
+                  {allMesssages?.map((item, i) => (
+                    <div className="space-y-4" key={i}>
+                      {item?.senderId === userData?.id ? (
+                        <Sender profileImage={userImage} {...item} />
+                      ) : (
+                        <Receiver {...item} profileImage={userImage} />
+                      )}
+                    </div>
+                  ))}
+                </>
+              </>
+            )}
           </>
         )}
       </div>

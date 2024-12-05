@@ -1,8 +1,15 @@
 import React from "react";
 import { FaPhone } from "react-icons/fa";
-import ActiveRadio from "./ActiveRadio";
+import ActiveRadio, { OfflineRadio } from "./ActiveRadio";
 
-const ChatBoxHeader = ({ selectedUser }) => {
+const ChatBoxHeader = ({
+  selectedUser,
+  selectActiveUsers,
+  userData,
+  receiverId,
+}) => {
+  const isActive = selectActiveUsers.includes(receiverId);
+
   return (
     <div className="min-h-[70px] max-h-[70px] flex items-center justify-between px-6 border-b-2 ">
       {selectedUser && (
@@ -11,7 +18,7 @@ const ChatBoxHeader = ({ selectedUser }) => {
             <h1 className="text-xl font-semibold">
               {selectedUser ? selectedUser : null}
             </h1>
-            <ActiveRadio />
+            {isActive ? <ActiveRadio /> : <OfflineRadio />}
           </div>
           <div>
             <button>

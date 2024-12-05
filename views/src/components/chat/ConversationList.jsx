@@ -4,8 +4,8 @@ import { FaComments, FaUserPlus } from "react-icons/fa";
 import { userImage } from "../../constant";
 import { Modals } from "../Modals";
 import { useMyContext } from "../../store/ContextApi";
-import { socket } from "../../../utils/socket";
 import { truncateText } from "../../../utils/truncate";
+import ActiveRadio, { OfflineRadio } from "./ActiveRadio";
 
 const ConversationList = ({
   openUserList,
@@ -34,7 +34,7 @@ const ConversationList = ({
             className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-700 transition-all"
           >
             <FaUserPlus className="text-sm" />
-            Add User
+            Create
           </button>
           <button className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-green-700 transition-all">
             <FaComments className="text-sm" />
@@ -54,7 +54,11 @@ const ConversationList = ({
           />
         ))
       ) : (
-        <>no conversation created yet</>
+        <div className="pt-10">
+          <p className="bg-gray-500 text-white p-2 rounded-lg text-center w-fit px-3">
+            Please Create a Conversation
+          </p>
+        </div>
       )}
       <Modals
         allUsers={allUsers}
@@ -82,8 +86,14 @@ const SingleUser = ({
   setSelectedUser,
   Message,
 }) => {
+  const { socket, selectActiveUsers } = useMyContext();
+
   const user =
     userData?.id === senderId ? receiver?.userName : sender?.userName;
+  const activeUser = userData?.id === senderId ? receiver?.id : sender?.id;
+
+  const isActive = selectActiveUsers.includes(activeUser);
+
   return (
     <div
       onClick={() => {
@@ -98,8 +108,14 @@ const SingleUser = ({
     >
       <img className="w-9 h-9 rounded-full" alt={userName} src={userImage} />
       <div>
-        <h3 className="text-lg font-bold">{user}</h3>
-        {Message.length > 0 ? <p>{truncateText(Message[0]?.text, 2)}</p> : null}
+        <div className="flex items-center gap-1">
+          <h3 className="text-lg font-bold">{user}</h3>
+          {isActive ? <ActiveRadio /> : <OfflineRadio />}
+        </div>
+
+        {Message.length > 0 ? (
+          <p className="text-xs">{truncateText(Message[0]?.text, 4)}</p>
+        ) : null}
       </div>
     </div>
   );
