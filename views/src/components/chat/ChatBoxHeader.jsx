@@ -10,8 +10,8 @@ const ChatBoxHeader = ({ selectActiveUsers, userData, receiverId }) => {
 
     openUserList,
     setOpenUserList,
+    isUserActive,
   } = useMyContext();
-  const isActive = selectActiveUsers.includes(receiverId);
 
   return (
     <div className="min-h-[70px] max-h-[70px] flex items-center justify-between px-6 border-b-2 ">
@@ -33,7 +33,7 @@ const ChatBoxHeader = ({ selectActiveUsers, userData, receiverId }) => {
               <h1 className="text-xl font-semibold">
                 {selectedUser ? selectedUser : null}
               </h1>
-              {isActive ? <ActiveRadio /> : <OfflineRadio />}
+              {isUserActive ? <ActiveRadio /> : <OfflineRadio />}
             </div>
           )}
         </div>

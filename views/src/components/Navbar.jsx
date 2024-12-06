@@ -21,7 +21,7 @@ const Navbar = () => {
           </Link>
         </div>
         <ul
-          className={`lg:static  absolute left-0  top-16 w-full lg:w-fit lg:px-0 sm:px-10 px-4  lg:bg-transparent bg-black   ${
+          className={`lg:static  absolute left-0  top-[74px] w-full lg:w-fit lg:px-0 sm:px-10 px-4  lg:bg-transparent bg-black   ${
             headerToggle
               ? "min-h-fit max-h-navbarHeight lg:py-0 py-4 shadow-sm shadow-slate-700 lg:shadow-none"
               : "h-0 overflow-hidden "

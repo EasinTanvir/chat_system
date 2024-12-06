@@ -17,7 +17,7 @@ module.exports = {
       }
 
       activeUsers.add(userId);
-      console.log(`User ${userId} connected, Socket ID: ${socket.id}`);
+
       console.log("Active Users:", Array.from(activeUsers));
 
       io.emit("active-user", Array.from(activeUsers));
@@ -26,8 +26,17 @@ module.exports = {
         socket.join(data.converId);
       });
 
+      socket.on("user-logout", () => {
+        console.log(`User ${userId} logged out.`);
+
+        activeUsers.delete(userId);
+        console.log("Active Users after logout:", Array.from(activeUsers));
+
+        io.emit("active-user", Array.from(activeUsers));
+      });
+
       socket.on("disconnect", () => {
-        console.log(`User ${userId} disconnected, Socket ID: ${socket.id}`);
+        console.log(`User ${userId} disconnected.`);
 
         const remainingSockets = Array.from(io.sockets.sockets.values()).some(
           (s) => s.handshake.auth.token === userId
@@ -36,6 +45,8 @@ module.exports = {
         if (!remainingSockets) {
           activeUsers.delete(userId);
         }
+
+        console.log("Active Users after disconnect:", Array.from(activeUsers));
 
         io.emit("active-user", Array.from(activeUsers));
       });

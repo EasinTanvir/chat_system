@@ -95,11 +95,11 @@ const SingleUser = ({
   setSelectedUser,
   Message,
 }) => {
-  const { socket, selectActiveUsers } = useMyContext();
+  const { socket, selectActiveUsers, setCurrentInbox } = useMyContext();
 
   const user =
     userData?.id === senderId ? receiver?.userName : sender?.userName;
-  const activeUser = userData?.id === senderId ? receiver?.id : sender?.id;
+  const activeUser = userData?.id === senderId ? receiverId : senderId;
 
   const isActive = selectActiveUsers.includes(activeUser);
 
@@ -110,6 +110,7 @@ const SingleUser = ({
         socket.emit("room", { converId: id });
         setReceiverId(receiverId);
         setSelectedUser(user);
+        setCurrentInbox({ senderId, receiverId });
       }}
       className={`border p-2 cursor-pointer rounded-xl  flex items-center  gap-3 ${
         converId === id ? "bg-slate-300" : ""

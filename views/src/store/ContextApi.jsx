@@ -17,7 +17,9 @@ export const ContextProvider = ({ children }) => {
   const [selectActiveUsers, setSelectActiveUser] = useState([]);
   const [socket, setSocket] = useState(null);
 
-  // Create the socket connection once user data is available
+  const [currentInbox, setCurrentInbox] = useState(null);
+  const [isUserActive, setIsUserActive] = useState(false);
+
   useEffect(() => {
     if (userData?.id) {
       const socketInstance = io.connect("http://localhost:3000", {
@@ -25,12 +27,27 @@ export const ContextProvider = ({ children }) => {
       });
       setSocket(socketInstance);
 
-      // Clean up socket on component unmount or when userData changes
       return () => {
         socketInstance.disconnect();
       };
     }
-  }, []);
+  }, [userData]);
+
+  useEffect(() => {
+    if (userData?.id) {
+      const activeUser =
+        userData?.id === currentInbox?.senderId
+          ? currentInbox?.receiverId
+          : currentInbox?.senderId;
+
+      const isActive = selectActiveUsers.includes(activeUser);
+      console.log("isActive", isActive);
+
+      setIsUserActive(isActive);
+    } else {
+      setIsUserActive(false);
+    }
+  }, [userData, selectActiveUsers, currentInbox]);
 
   return (
     <ContextApi.Provider
@@ -49,7 +66,11 @@ export const ContextProvider = ({ children }) => {
         setSelectedUser,
         selectActiveUsers,
         setSelectActiveUser,
-        socket, // Add socket to the context value
+        socket,
+        currentInbox,
+        setCurrentInbox,
+        isUserActive,
+        setIsUserActive,
       }}
     >
       {children}

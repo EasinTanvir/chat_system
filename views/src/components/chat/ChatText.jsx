@@ -3,6 +3,7 @@ import { IoSend } from "react-icons/io5";
 import api from "../../api/api";
 import { useMyContext } from "../../store/ContextApi";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 const ChatText = ({ allMesssages, setAllMesssages }) => {
   const { converId, receiverId, userData, socket } = useMyContext();
@@ -10,6 +11,8 @@ const ChatText = ({ allMesssages, setAllMesssages }) => {
   const [text, setText] = useState("");
 
   const onMessageHandler = async (event) => {
+    if (!socket) return toast.error("socket loaded failed");
+
     event.preventDefault();
     socket.emit("send-message-backend", {
       text,

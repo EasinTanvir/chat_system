@@ -45,6 +45,7 @@ const Chat = () => {
   useEffect(() => {
     if (!socket) return;
     const handler = (data) => {
+      console.log("msg", data);
       setAllMesssages((prevMessages) => [
         ...prevMessages,
         {
@@ -59,7 +60,7 @@ const Chat = () => {
     socket.on("send-message-frontend", handler);
 
     return () => socket.off("send-message-frontend", handler);
-  }, []);
+  }, [socket]);
 
   useEffect(() => {
     const fetchConverMessages = async () => {
@@ -81,9 +82,7 @@ const Chat = () => {
   }, [converId]);
 
   useEffect(() => {
-    const socket = io.connect("http://localhost:3000", {
-      auth: { token: userData?.id },
-    });
+    if (!socket) return;
 
     const handler = (data) => {
       setSelectActiveUser(data);
@@ -114,7 +113,7 @@ const Chat = () => {
   return (
     <div className="flex min-h-[calc(100vh-74px)]  max-h-[calc(100vh-74px)]">
       <div
-        className={`min-h-full max-h-full overflow-y-auto z-50 bg-white  border  space-y-6 transition-all duration-100 ${
+        className={`min-h-full max-h-full overflow-y-auto z-40 bg-white  border  space-y-6 transition-all duration-100 ${
           openUserList
             ? "w-0 p-0"
             : "md:static absolute top-[74px] left-0  w-80 p-6"
