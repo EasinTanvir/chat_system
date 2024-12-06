@@ -26,9 +26,16 @@ const SignUp = () => {
     try {
       setLoading(true);
       const { data } = await api.post("/auth/register", formData);
+      reset();
       toast.success(data?.message);
+      navigate("/signin");
     } catch (err) {
       console.log(err);
+      if (err?.response?.data?.message === "Sorry email already taken") {
+        setError("email", { message: err?.response?.data?.message });
+      } else {
+        toast.error(err?.response?.data?.message);
+      }
     } finally {
       setLoading(false);
     }
@@ -42,7 +49,7 @@ const SignUp = () => {
       >
         <div className="mb-5">
           <h1 className=" text-center  font-bold text-slate-800 text-2xl uppercase ">
-            Chat System
+            Chat App
           </h1>
           <p className="text-slate-600 text-center">
             Signin and chat with your firent real time

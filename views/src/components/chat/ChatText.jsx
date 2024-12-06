@@ -9,7 +9,8 @@ const ChatText = ({ allMesssages, setAllMesssages }) => {
 
   const [text, setText] = useState("");
 
-  const onMessageHandler = async () => {
+  const onMessageHandler = async (event) => {
+    event.preventDefault();
     socket.emit("send-message-backend", {
       text,
       converId,
@@ -39,8 +40,9 @@ const ChatText = ({ allMesssages, setAllMesssages }) => {
   };
 
   return (
-    <div className="flex min-h-14  max-h-14 ">
+    <form onSubmit={onMessageHandler} className="flex min-h-14  max-h-14 ">
       <input
+        disabled={!converId}
         value={text}
         onChange={(e) => setText(e.target.value)}
         placeholder="Type Message"
@@ -48,13 +50,16 @@ const ChatText = ({ allMesssages, setAllMesssages }) => {
         className="h-full border w-full outline-none px-4"
       />
       <button
-        onClick={onMessageHandler}
-        className="flex items-center justify-center gap-2 bg-green-600 text-white px-4 py-2  shadow-md "
+        disabled={!converId}
+        type="submit"
+        className={`flex items-center justify-center gap-2 bg-green-600 text-white px-4 py-2  shadow-md  ${
+          !converId ? "opacity-40" : ""
+        }`}
       >
         <span>Send</span>
         <IoSend className="text-lg" />
       </button>
-    </div>
+    </form>
   );
 };
 

@@ -31,7 +31,7 @@ const SignIn = () => {
       localStorage.setItem("userData", JSON.stringify(data.info));
       setUserData(data.info);
       reset();
-      navigate("/");
+      navigate("/chat");
     } catch (errors) {
       toast.error(errors?.response?.data?.message);
     } finally {
@@ -47,7 +47,7 @@ const SignIn = () => {
       >
         <div className="mb-5">
           <h1 className=" text-center  font-bold text-slate-800 text-2xl uppercase ">
-            Chat System
+            Chat App
           </h1>
           <p className="text-slate-600 text-center">
             Signin and chat with your firent real time

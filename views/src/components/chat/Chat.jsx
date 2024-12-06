@@ -43,6 +43,7 @@ const Chat = () => {
   } = useFetchAllConversations(onError);
 
   useEffect(() => {
+    if (!socket) return;
     const handler = (data) => {
       setAllMesssages((prevMessages) => [
         ...prevMessages,
@@ -113,14 +114,15 @@ const Chat = () => {
   return (
     <div className="flex min-h-[calc(100vh-74px)]  max-h-[calc(100vh-74px)]">
       <div
-        className={`min-h-full max-h-full overflow-y-auto  border  space-y-6 transition-all duration-100 ${
-          openUserList ? " w-0 p-0" : "w-80 p-6"
+        className={`min-h-full max-h-full overflow-y-auto z-50 bg-white  border  space-y-6 transition-all duration-100 ${
+          openUserList
+            ? "w-0 p-0"
+            : "md:static absolute top-[74px] left-0  w-80 p-6"
         }`}
       >
         <ConversationList
           allUsers={allUsers}
           allConversation={allConversations?.conversations}
-          openUserList={openUserList}
           refetch={refetch}
           conversationRefetch={conversationRefetch}
         />

@@ -1,5 +1,7 @@
 import React from "react";
-import { FaComments, FaUserPlus } from "react-icons/fa";
+import { FaUserPlus } from "react-icons/fa";
+import { FaArrowLeftLong } from "react-icons/fa6";
+import { FaArrowRightLong } from "react-icons/fa6";
 
 import { userImage } from "../../constant";
 import { Modals } from "../Modals";
@@ -8,7 +10,6 @@ import { truncateText } from "../../../utils/truncate";
 import ActiveRadio, { OfflineRadio } from "./ActiveRadio";
 
 const ConversationList = ({
-  openUserList,
   allUsers,
   allConversation,
   refetch,
@@ -23,6 +24,8 @@ const ConversationList = ({
     setReceiverId,
     selectedUser,
     setSelectedUser,
+    openUserList,
+    setOpenUserList,
   } = useMyContext();
 
   return (
@@ -36,9 +39,15 @@ const ConversationList = ({
             <FaUserPlus className="text-sm" />
             Create
           </button>
-          <button className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-green-700 transition-all">
-            <FaComments className="text-sm" />
-          </button>
+          <div className="flex justify-end items-center  w-full">
+            <button onClick={() => setOpenUserList(!openUserList)}>
+              {!openUserList ? (
+                <FaArrowLeftLong className="text-slate-800" size={20} />
+              ) : (
+                <FaArrowRightLong className="text-slate-800" size={20} />
+              )}
+            </button>
+          </div>
         </div>
       )}
       {allConversation?.length > 0 ? (
